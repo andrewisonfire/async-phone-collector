@@ -1,7 +1,6 @@
 import re
+import time
 import requests
-import asyncio
-import aiohttp
 
 regular_for_phones = "([+]?[8,7]\d{3}\d{5})"
 # test = "^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$"
@@ -9,10 +8,16 @@ regular_for_phones = "([+]?[8,7]\d{3}\d{5})"
 urls = [
     "https://hands.ru/company/about",
     "https://repetitors.info",
-    "https://vk.com/flexbby",
-    "https://vk.com/griblee",
-    "https://vk.com/id1342733",
-    "https://vk.com/id72368811"
+    "https://hands.ru/company/about",
+    "https://repetitors.info",
+    "https://hands.ru/company/about",
+    "https://repetitors.info",
+    "https://hands.ru/company/about",
+    "https://repetitors.info",
+    "https://hands.ru/company/about",
+    "https://repetitors.info",
+    "https://hands.ru/company/about",
+    "https://repetitors.info",
 ]
 
 
@@ -51,9 +56,9 @@ class PhoneCollector:
 if __name__ == "__main__":
 
     collector = PhoneCollector()
-
+    t1 = time.time()
     for url in urls:
         content = collector.collect_data(url)
 
     print(collector.data)
-
+    print(time.time()-t1)
