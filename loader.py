@@ -1,36 +1,59 @@
-class Storage:
-    """Класс для хранения метрик в памяти процесса"""
+import re
+import requests
+import asyncio
+import aiohttp
+
+regular_for_phones = "([+]?[8,7]\d{3}\d{5})"
+# test = "^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$"
+
+urls = [
+    "https://hands.ru/company/about",
+    "https://repetitors.info",
+    "https://vk.com/flexbby",
+    "https://vk.com/griblee",
+    "https://vk.com/id1342733",
+    "https://vk.com/id72368811"
+]
+
+
+async def fetch_page(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            response = await response.read()
+
+
+class PhoneCollector:
 
     def __init__(self):
-        # используем словарь для хранения метрик
-        self._data = {}
+        self.data = {}
 
-    def put(self, key, value, timestamp):
-        if key not in self._data:
-            self._data[key] = {}
+    def fetch_page(self, url):
+        response = requests.get(url=url)
+        assert response.status_code == 200
+        return response.text
 
-        self._data[key][timestamp] = value
+    def handle_html(self, text):
+        r = re.compile(regular_for_phones)
+        match = r.findall(text)
+        return match
 
-    def get(self, key):
-        data = self._data
+    def collect_data(self, url):
+        self.data.setdefault(url,
+            self.handle_html(self.fetch_page(url))
+        )
 
-        # вовзращаем нужную метрику если это не *
-        if key != "*":
-            data = {
-                key: data.get(key, {})
-            }
-
-        # для простоты мы храним метрики в обычном словаре и сортируем значения
-        # при каждом запросе, в реальном приложении следует выбрать другую
-        # структуру данных
-        result = {}
-        for key, timestamp_data in data.items():
-            result[key] = sorted(timestamp_data.items())
-
-        return result
-
-
-class Loader:
-    """"""
-    def __init__(self):
+    def validate_data(self):
+        """
+        :yield: phone number to validator
+        """
         pass
+
+if __name__ == "__main__":
+
+    collector = PhoneCollector()
+
+    for url in urls:
+        content = collector.collect_data(url)
+
+    print(collector.data)
+
