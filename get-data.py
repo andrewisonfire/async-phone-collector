@@ -61,6 +61,7 @@ async def run(urls):
 
 
 def generate_urls(num):
+    """"""
     for i in range(num):
         yield "https://vk.com/id{}".format(72368814+i)
 
