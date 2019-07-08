@@ -1,5 +1,4 @@
 import asyncio
-import aiohttp
 import re
 import requests
 import time
@@ -31,40 +30,11 @@ urls = [
     # "https://vk.com/id72368814",
 ]
 
-    
-async def fetch_page(session, url):
-    # async with aiohttp.ClientSession() as session:
-    async with session.get(url) as response:
-        response = await response.read()
-        response = str(response)
-        r = re.compile(regular_for_phones)
-        match = r.findall(response)
-
-        return match
-        # return response
-
-
-async def run(urls):
-    tasks = []
-    async with aiohttp.ClientSession() as session:
-        for url in urls:
-            task = asyncio.ensure_future(fetch_page(session, url))
-            tasks.append(task)
-
-        responses = await asyncio.gather(*tasks)
-        print(responses)
-
-# async def handle_html(text):
-#     r = re.compile(regular_for_phones)
-#     match = await r.findall(text)
-#     return match
-
 
 def generate_urls(num):
     """"""
     for i in range(num):
         yield "https://vk.com/id{}".format(72368814+i)
-
 
 
 class PhoneCollector:
