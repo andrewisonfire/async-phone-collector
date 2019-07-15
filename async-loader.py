@@ -1,6 +1,5 @@
 import asyncio
 import aiohttp
-import time
 import re
 
 regular_for_phones = "([8,7]\d{3}\d{5})"
@@ -36,7 +35,6 @@ class AsyncLoader:
             match = r.findall(response)
 
             return match
-            # return response
 
     @staticmethod
     async def run(urls):
