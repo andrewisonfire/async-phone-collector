@@ -21,9 +21,7 @@ urls = [
 
 class AsyncLoader:
     """
-    не совсем то
-    надо сделать что-то типа очереди
-    которая асинхронно читает из базы и отдаёт в загрузчик url'ы
+
     """
     @staticmethod
     async def fetch_page(session, url):
