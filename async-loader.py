@@ -25,7 +25,6 @@ class AsyncLoader:
     """
     @staticmethod
     async def fetch_page(session, url):
-        # async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             response = await response.read()
             response = str(response)
