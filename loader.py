@@ -29,17 +29,21 @@ async def fetch_page(url):
 
 class PhoneCollector:
 
-    def __init__(self):
+    def __init__(self, regular_for_phones):
         self.data = {}
+        self.r = re.compile(regular_for_phones)
 
     def fetch_page(self, url):
         response = requests.get(url=url)
-        assert response.status_code == 200
-        return response.text
+        if response.status_code == 200:
+            return response.text
+        else:
+            # можно пометить url в базе "для повторного посещения"
+            pass
+
 
     def handle_html(self, text):
-        r = re.compile(regular_for_phones)
-        match = r.findall(text)
+        match = self.r.findall(text)
         return match
 
     def collect_data(self, url):
@@ -55,7 +59,7 @@ class PhoneCollector:
 
 if __name__ == "__main__":
 
-    collector = PhoneCollector()
+    collector = PhoneCollector(regular_for_phones)
     t1 = time.time()
     for url in urls:
         content = collector.collect_data(url)

@@ -23,22 +23,21 @@ class AsyncLoader:
     """
 
     """
-    @staticmethod
-    async def fetch_page(session, url):
+    def __init__(self, regular_for_phones):
+        self.regular_ex = re.compile(regular_for_phones)
+
+    async def fetch_page(self, session, url):
         async with session.get(url) as response:
-            response = await response.read()
-            response = str(response)
-            r = re.compile(regular_for_phones)
-            match = r.findall(response)
+            if response.status == 200:
+                response = await response.text()
+                match = self.regular_ex.findall(response)
+                return match
 
-            return match
-
-    @staticmethod
-    async def run(urls):
+    async def run(self, urls):
         tasks = []
         async with aiohttp.ClientSession() as session:
             for url in urls:
-                task = asyncio.ensure_future(AsyncLoader.fetch_page(session, url))
+                task = asyncio.ensure_future(self.fetch_page(session, url))
                 tasks.append(task)
 
             responses = await asyncio.gather(*tasks)
@@ -46,6 +45,7 @@ class AsyncLoader:
 
 
 if __name__ == "__main__":
+    loader = AsyncLoader(regular_for_phones)
     loop = asyncio.get_event_loop()
-    future = asyncio.ensure_future(AsyncLoader.run(urls))
+    future = asyncio.ensure_future(loader.run(urls))
     loop.run_until_complete(future)
