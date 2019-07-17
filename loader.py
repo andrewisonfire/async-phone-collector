@@ -21,12 +21,6 @@ urls = [
 ]
 
 
-async def fetch_page(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            response = await response.read()
-
-
 class PhoneCollector:
 
     def __init__(self, regular_for_phones):
