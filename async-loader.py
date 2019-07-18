@@ -2,20 +2,24 @@ import asyncio
 import aiohttp
 import re
 
-regular_for_phones =  "(?:\+7|8)(?:\d{2,3}){4}" #"([+]?[8,7]?[(]\d{3}?[}]\d{5})" # "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})" #
+# regular_for_phones =  "(?:\+7|8)(?:\d{2,3}){4}"
+# #"([+]?[8,7]?[(]\d{3}?[}]\d{5})"
+# "(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)\s*\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})"
+
+re_1 = "([+]?[8,7][( ]?\d{3}[ )]?\d{3}[- ]?\d{2}[- ]?\d{2})"
 
 urls = [
     "https://hands.ru/company/about",
     "https://repetitors.info",
-"https://hands.ru/company/about",
+    "https://hands.ru/company/about",
     "https://repetitors.info",
-"https://hands.ru/company/about",
+    "https://hands.ru/company/about",
     "https://repetitors.info",
-"https://hands.ru/company/about",
+    "https://hands.ru/company/about",
     "https://repetitors.info",
-"https://hands.ru/company/about",
+    "https://hands.ru/company/about",
     "https://repetitors.info",
-"https://hands.ru/company/about",
+    "https://hands.ru/company/about",
     "https://repetitors.info",
 ]
 
@@ -35,6 +39,9 @@ class AsyncLoader:
                 return {
                     url: match
                 }
+            else:
+                pass
+    #         пометить url для повторного посещения
 
     async def run(self, urls):
         tasks = []
@@ -44,19 +51,17 @@ class AsyncLoader:
                 tasks.append(task)
 
             responses = await asyncio.gather(*tasks)
-            # print(responses)
             for response in responses:
                 self.data.update(response)
-            # await self.db_loader()
 
     async def db_loader(self, phones):
         """
-        yield phones to database
+        put phones to database
         """
 
 
 if __name__ == "__main__":
-    loader = AsyncLoader(regular_for_phones)
+    loader = AsyncLoader(re_1)
     loop = asyncio.get_event_loop()
     future = asyncio.ensure_future(loader.run(urls))
     loop.run_until_complete(future)

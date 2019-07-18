@@ -2,8 +2,9 @@ import re
 import time
 import requests
 
-regular_for_phones = "([+]?[8,7]\d{3}\d{5})"
+# regular_for_phones = "([+]?[8,7]\d{3}\d{5})"
 # test = "^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$"
+re_1 = "([+]?[8,7][( ]?\d{3}[ )]?\d{3}[- ]?\d{2}[- ]?\d{2})"
 
 urls = [
     "https://hands.ru/company/about",
@@ -53,7 +54,7 @@ class PhoneCollector:
 
 if __name__ == "__main__":
 
-    collector = PhoneCollector(regular_for_phones)
+    collector = PhoneCollector(re_1)
     t1 = time.time()
     for url in urls:
         content = collector.collect_data(url)
